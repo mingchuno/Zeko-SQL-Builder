@@ -1,49 +1,51 @@
 package io.zeko.db.sql.connections
 
-import java.util.LinkedHashMap
+public interface DBSession {
+    public fun pool(): DBPool
 
-interface DBSession {
-    fun pool(): DBPool
+    public fun connection(): DBConn
 
-    fun connection(): DBConn
+    public fun rawConnection(): Any
 
-    fun rawConnection(): Any
+    public fun setQueryLogger(logger: DBLogger): DBSession
 
-    fun setQueryLogger(logger: DBLogger): DBSession
+    public fun getQueryLogger(): DBLogger?
 
-    fun getQueryLogger(): DBLogger?
+    public suspend fun <A> once(operation: suspend (DBSession) -> A): A
 
-    suspend fun <A> once(operation: suspend (DBSession) -> A): A
-
-    suspend fun <A> retry(numRetries: Int, delayTry: Long = 0, operation: suspend (DBSession) -> A)
-
-    suspend fun <A> transaction(operation: suspend (DBSession) -> A): A
-
-    suspend fun <A> transactionOpen(operation: suspend (DBSession) -> A): A
-
-    suspend fun <A> transaction(
+    public suspend fun <A> retry(
         numRetries: Int,
         delayTry: Long = 0,
         operation: suspend (DBSession) -> A
     )
 
-    suspend fun close()
+    public suspend fun <A> transaction(operation: suspend (DBSession) -> A): A
 
-    suspend fun insert(
+    public suspend fun <A> transactionOpen(operation: suspend (DBSession) -> A): A
+
+    public suspend fun <A> transaction(
+        numRetries: Int,
+        delayTry: Long = 0,
+        operation: suspend (DBSession) -> A
+    )
+
+    public suspend fun close()
+
+    public suspend fun insert(
         sql: String,
         params: List<Any?>,
         closeStatement: Boolean = true,
         closeConn: Boolean = false
     ): List<*>
 
-    suspend fun update(
+    public suspend fun update(
         sql: String,
         params: List<Any?>,
         closeStatement: Boolean = true,
         closeConn: Boolean = false
     ): Int
 
-    suspend fun <T> queryPrepared(
+    public suspend fun <T> queryPrepared(
         sql: String,
         params: List<Any?>,
         dataClassHandler: (dataMap: Map<String, Any?>) -> T,
@@ -51,25 +53,25 @@ interface DBSession {
         closeConn: Boolean = false
     ): List<T>
 
-    suspend fun queryPrepared(sql: String, params: List<Any?>): Any
+    public suspend fun queryPrepared(sql: String, params: List<Any?>): Any
 
-    suspend fun queryPrepared(
+    public suspend fun queryPrepared(
         sql: String,
         params: List<Any?>,
         columns: List<String>,
         closeConn: Boolean = false
     ): List<LinkedHashMap<String, Any?>>
 
-    suspend fun <T> query(
+    public suspend fun <T> query(
         sql: String,
         dataClassHandler: (dataMap: Map<String, Any?>) -> T,
         closeStatement: Boolean = true,
         closeConn: Boolean = false
     ): List<T>
 
-    suspend fun query(sql: String): Any
+    public suspend fun query(sql: String): Any
 
-    suspend fun query(
+    public suspend fun query(
         sql: String,
         columns: List<String>,
         closeConn: Boolean = false

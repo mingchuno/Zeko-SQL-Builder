@@ -3,10 +3,14 @@ package io.zeko.db.sql
 import io.zeko.db.sql.utilities.toSnakeCase
 import io.zeko.model.Entity
 
-open class Update : DataManipulation {
+public open class Update : DataManipulation {
     protected var where: Query? = null
 
-    constructor(entity: Entity, parameterize: Boolean = false, espTableName: Boolean = false) {
+    public constructor(
+        entity: Entity,
+        parameterize: Boolean = false,
+        espTableName: Boolean = false
+    ) {
         this.entity = entity
         this.parameterize = parameterize
         this.espTableName = espTableName
@@ -17,12 +21,12 @@ open class Update : DataManipulation {
         return this
     }
 
-    fun where(query: Query): Update {
+    public fun where(query: Query): Update {
         where = query
         return this
     }
 
-    fun where(vararg block: QueryBlock): Update {
+    public fun where(vararg block: QueryBlock): Update {
         where = Query().where(*block)
         return this
     }

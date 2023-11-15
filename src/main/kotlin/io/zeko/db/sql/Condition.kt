@@ -1,13 +1,8 @@
 package io.zeko.db.sql
 
-abstract class Condition {
-    private var logic: String = ""
+public abstract class Condition(private var logic: String) {
 
-    constructor(logic: String) {
-        this.logic = logic
-    }
+    public open fun getStatement(): String = logic
 
-    open fun getStatement(): String = logic
-
-    open fun getOperator(): String = ""
+    public open fun getOperator(): String = ""
 }

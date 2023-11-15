@@ -1,9 +1,9 @@
 package io.zeko.db.sql.connections
 
-interface DBPool {
-    suspend fun createConnection(): DBConn
+public interface DBPool {
+    public suspend fun createConnection(): DBConn
 
-    fun getInsertStatementMode(): Int
+    public fun getInsertStatementMode(): Int
 
-    fun setInsertStatementMode(mode: Int)
+    public fun setInsertStatementMode(mode: Int)
 }

@@ -4,10 +4,10 @@ import io.zeko.db.sql.utilities.toCamelCase
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-abstract class Entity {
+public abstract class Entity {
     protected var map: MutableMap<String, Any?>
 
-    constructor(map: Map<String, Any?>) {
+    public constructor(map: Map<String, Any?>) {
         val camelCaseMap = mutableMapOf<String, Any?>()
         val mappings = propTypeMapping()
         for ((k, v) in map) {
@@ -23,27 +23,27 @@ abstract class Entity {
         this.map = camelCaseMap.withDefault { null }
     }
 
-    constructor(vararg props: Pair<String, Any?>) {
+    public constructor(vararg props: Pair<String, Any?>) {
         this.map = mutableMapOf(*props).withDefault { null }
     }
 
-    open fun ignoreFields(): List<String> = listOf()
+    public open fun ignoreFields(): List<String> = listOf()
 
-    open fun copyDataMap(map: Map<String, Any?>) {
+    public open fun copyDataMap(map: Map<String, Any?>) {
         this.map = map.toMutableMap()
     }
 
-    open fun copyDataMap(entity: Entity) {
+    public open fun copyDataMap(entity: Entity) {
         this.map = entity.dataMap().toMutableMap()
     }
 
-    open fun tableName(): String = ""
+    public open fun tableName(): String = ""
 
-    open fun dataMap(): MutableMap<String, Any?> = map
+    public open fun dataMap(): MutableMap<String, Any?> = map
 
-    open fun propTypeMapping(): Map<String, Type>? = null
+    public open fun propTypeMapping(): Map<String, Type>? = null
 
-    open fun mapPropValue(mappings: Map<String, Type>, prop: String, value: Any): Any {
+    public open fun mapPropValue(mappings: Map<String, Type>, prop: String, value: Any): Any {
         if (mappings.isNotEmpty()) {
             if (!mappings.containsKey(prop)) return value
             val convertType = mappings[prop]
@@ -54,7 +54,7 @@ abstract class Entity {
         return value
     }
 
-    open fun convertValueToType(value: Any, type: Type): Any {
+    public open fun convertValueToType(value: Any, type: Type): Any {
         val converted =
             when (type) {
                 // tiny(1) hikari returns booleam, jasync returns byte
@@ -153,10 +153,10 @@ abstract class Entity {
         return converted
     }
 
-    fun repeatMs(dateStr: String) =
+    protected fun repeatMs(dateStr: String): String =
         "S".repeat(dateStr.split(".").last().takeWhile { !it.isLetter() }.length)
 
-    fun convertZoneDateTime(value: Any, useSystem: Boolean = false): ZonedDateTime {
+    protected fun convertZoneDateTime(value: Any, useSystem: Boolean = false): ZonedDateTime {
         if (value !is String) {
             val dateStr = value.toString()
             var patternStr = ""
@@ -188,7 +188,7 @@ abstract class Entity {
         return systemZoneDateTime.withZoneSameInstant(ZoneId.of("UTC"))
     }
 
-    open fun toParams(valueHandler: ((String, Any?) -> Any?)? = null): List<Any?> {
+    public open fun toParams(valueHandler: ((String, Any?) -> Any?)? = null): List<Any?> {
         val entries = dataMap().entries
         val params = arrayListOf<Any?>()
         val ignores = ignoreFields()

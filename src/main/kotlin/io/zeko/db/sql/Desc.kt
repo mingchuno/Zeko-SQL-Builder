@@ -1,7 +1,6 @@
 package io.zeko.db.sql
 
-class Desc : Sort {
-    constructor(fieldName: String) : super(fieldName)
+public class Desc(fieldName: String) : Sort(fieldName) {
 
     override fun getDirection(): String {
         return "DESC"

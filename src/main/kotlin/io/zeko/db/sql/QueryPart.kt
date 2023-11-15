@@ -2,22 +2,18 @@ package io.zeko.db.sql
 
 import java.util.*
 
-data class QueryInfo(
+internal data class QueryInfo(
     val sql: String,
     val columns: List<String>,
     val sqlFields: String,
     val parts: QueryParts
 )
 
-class QueryParts {
+internal class QueryParts {
     private val rgxFindField =
         "([^\\\"\\ ][a-zA-Z0-9\\_]+[^\\\"\\ ])\\.([^\\\"\\s][a-zA-Z0-9\\_\\-\\=\\`\\~\\:\\.\\,\\|\\*\\^\\#\\@\\\$]+[\\^\"\\s])"
             .toPattern()
     var linebreak: String = " "
-        get() = field
-        set(value) {
-            field = value
-        }
 
     var query: Query
     var fields: LinkedHashMap<String, Array<String>>
@@ -66,7 +62,7 @@ class QueryParts {
 
     private fun buildFromPart(esp: String, espTableName: Boolean): String {
         var fromPart = ""
-        if (from.size > 0) {
+        if (from.isNotEmpty()) {
             val f = from[0]
 
             if (f is String) {
@@ -74,11 +70,12 @@ class QueryParts {
                 fromTables.forEach {
                     val t = it.toString()
                     if (!t.isNullOrEmpty()) {
-                        if (espTableName) {
-                            fromPart += "${esp}${t}${esp}, "
-                        } else {
-                            fromPart += "$t, "
-                        }
+                        fromPart +=
+                            if (espTableName) {
+                                "${esp}${t}${esp}, "
+                            } else {
+                                "$t, "
+                            }
                     }
                 }
             } else if (f is Query) {
@@ -166,13 +163,14 @@ class QueryParts {
 
     private fun buildGroupByPart(esp: String, espTableName: Boolean): String {
         var groupByPart = ""
-        if (groupBys.size > 0) {
+        if (groupBys.isNotEmpty()) {
             groupBys.forEach {
-                if (espTableName) {
-                    groupByPart += escapeTableName("$it, ", esp)
-                } else {
-                    groupByPart += "$it, "
-                }
+                groupByPart +=
+                    if (espTableName) {
+                        escapeTableName("$it, ", esp)
+                    } else {
+                        "$it, "
+                    }
             }
 
             groupByPart = linebreak + "GROUP BY " + groupByPart.substring(0, groupByPart.length - 2)
@@ -213,8 +211,8 @@ class QueryParts {
     private fun buildLimitOffsetPart(esp: String, espTableName: Boolean): String =
         linebreak + if (limit != null) "LIMIT ${limit!![0]} OFFSET ${limit!![1]} " else ""
 
-    fun precompile(): Array<String> {
-        val (columns, sqlFields) = query.compileSelect()
+    internal fun precompile(): Array<String> {
+        val (_, sqlFields) = query.compileSelect()
         val esp = query.espChar
         val espTableName = query.espTableName
 
@@ -238,7 +236,7 @@ class QueryParts {
         )
     }
 
-    fun compile(): String {
+    internal fun compile(): String {
         val allParts = precompile()
         val sqlFields = allParts[0]
         val others = allParts.slice(1 until allParts.size)

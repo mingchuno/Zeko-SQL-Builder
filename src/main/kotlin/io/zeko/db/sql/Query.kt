@@ -1,17 +1,13 @@
 package io.zeko.db.sql
 
 import java.util.*
-import kotlin.collections.ArrayList
 
-open class Query {
-    var espChar: String
-        get() = field
+public open class Query {
+    internal var espChar: String
 
-    var asChar: String
-        get() = field
+    internal var asChar: String
 
-    var espTableName: Boolean
-        get() = field
+    internal var espTableName: Boolean
 
     private var currentTable: String = ""
 
@@ -33,29 +29,23 @@ open class Query {
 
     private var limitOffset: Array<Int>? = null
 
-    constructor(espChar: String = "`", asChar: String = "=", espTableName: Boolean = false) {
+    public constructor(espChar: String = "`", asChar: String = "=", espTableName: Boolean = false) {
         this.espChar = espChar
         this.asChar = asChar
         this.espTableName = espTableName
     }
 
-    constructor(espChar: String = "`", espTableName: Boolean = false) {
-        this.espChar = espChar
-        this.asChar = "="
-        this.espTableName = espTableName
-    }
-
-    fun table(name: String): Query {
+    public fun table(name: String): Query {
         currentTable = name
         return this
     }
 
-    fun fields(vararg names: String): Query {
+    public fun fields(vararg names: String): Query {
         fieldsToSelect[currentTable] = names as Array<String>
         return this
     }
 
-    fun compileSelect(): SelectPart {
+    internal fun compileSelect(): SelectPart {
         val selectFields = mutableListOf<String>()
         val columns = mutableListOf<String>()
 
@@ -97,7 +87,7 @@ open class Query {
         return SelectPart(columns, sqlFields)
     }
 
-    fun toParts(shouldLineBreak: Boolean = false): QueryParts {
+    private fun toParts(shouldLineBreak: Boolean = false): QueryParts {
         val parts =
             QueryParts(
                 this,
@@ -117,7 +107,7 @@ open class Query {
         return parts
     }
 
-    fun addExpressionAfter(type: CustomPart, block: QueryBlock) {
+    public fun addExpressionAfter(type: CustomPart, block: QueryBlock) {
         if (this.expression.containsKey(type)) {
             (this.expression[type] as ArrayList).add(block)
         } else {
@@ -125,13 +115,15 @@ open class Query {
         }
     }
 
-    fun precompile(shouldLineBreak: Boolean = false): Array<String> {
-        val selectPart = compileSelect()
+    internal fun precompile(shouldLineBreak: Boolean = false): Array<String> {
         val parts = toParts(shouldLineBreak)
         return parts.precompile()
     }
 
-    fun compile(processor: (Array<String>) -> String, shouldLineBreak: Boolean = false): QueryInfo {
+    internal fun compile(
+        processor: (Array<String>) -> String,
+        shouldLineBreak: Boolean = false
+    ): QueryInfo {
         val selectPart = compileSelect()
         val parts = toParts(shouldLineBreak)
         val partsArr = parts.precompile()
@@ -139,13 +131,13 @@ open class Query {
         return QueryInfo(sql, selectPart.columns, selectPart.sqlFields, parts)
     }
 
-    fun compile(shouldLineBreak: Boolean = false): QueryInfo {
+    internal fun compile(shouldLineBreak: Boolean = false): QueryInfo {
         val selectPart = compileSelect()
         val parts = toParts(shouldLineBreak)
         return QueryInfo(parts.compile(), selectPart.columns, selectPart.sqlFields, parts)
     }
 
-    fun toSql(shouldLineBreak: Boolean = false): String {
+    public fun toSql(shouldLineBreak: Boolean = false): String {
         return compile(shouldLineBreak).sql
     }
 
@@ -153,111 +145,111 @@ open class Query {
         return compile().sql
     }
 
-    fun from(table: String): Query {
+    public fun from(table: String): Query {
         tableFrom.add(table)
         return this
     }
 
-    fun from(tables: List<String>): Query {
+    public fun from(tables: List<String>): Query {
         tableFrom.addAll(tables)
         return this
     }
 
-    fun asTable(table: String): Query {
+    public fun asTable(table: String): Query {
         tableFrom.add(table)
         return this
     }
 
-    fun from(table: Query): Query {
+    public fun from(table: Query): Query {
         tableFrom.add(table)
         return this
     }
 
-    fun join(table: String): Query {
+    public fun join(table: String): Query {
         tableToJoin["join-@" + table] = arrayListOf()
         return this
     }
 
-    fun join(table: Query, asName: String): Query {
+    public fun join(table: Query, asName: String): Query {
         tableToJoin["join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun fullJoin(table: String): Query {
+    public fun fullJoin(table: String): Query {
         tableToJoin["full-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun fullJoin(table: Query, asName: String): Query {
+    public fun fullJoin(table: Query, asName: String): Query {
         tableToJoin["full-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun leftJoin(table: String): Query {
+    public fun leftJoin(table: String): Query {
         tableToJoin["left-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun leftJoin(table: Query, asName: String): Query {
+    public fun leftJoin(table: Query, asName: String): Query {
         tableToJoin["left-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun leftOuterJoin(table: String): Query {
+    public fun leftOuterJoin(table: String): Query {
         tableToJoin["left-@outer-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun leftOuterJoin(table: Query, asName: String): Query {
+    public fun leftOuterJoin(table: Query, asName: String): Query {
         tableToJoin["left-@outer-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun rightJoin(table: String): Query {
+    public fun rightJoin(table: String): Query {
         tableToJoin["right-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun rightJoin(table: Query, asName: String): Query {
+    public fun rightJoin(table: Query, asName: String): Query {
         tableToJoin["right-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun rightOuterJoin(table: String): Query {
+    public fun rightOuterJoin(table: String): Query {
         tableToJoin["right-@outer-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun rightOuterJoin(table: Query, asName: String): Query {
+    public fun rightOuterJoin(table: Query, asName: String): Query {
         tableToJoin["right-@outer-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun innerJoin(table: String): Query {
+    public fun innerJoin(table: String): Query {
         tableToJoin["inner-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun innerJoin(table: Query, asName: String): Query {
+    public fun innerJoin(table: Query, asName: String): Query {
         tableToJoin["inner-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun crossJoin(table: String): Query {
+    public fun crossJoin(table: String): Query {
         tableToJoin["cross-@join-@" + table] = arrayListOf()
         return this
     }
 
-    fun crossJoin(table: Query, asName: String): Query {
+    public fun crossJoin(table: Query, asName: String): Query {
         tableToJoin["cross-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
         return this
     }
 
-    fun on(joinCondition: QueryBlock, useOr: Boolean = false): Query {
+    public fun on(joinCondition: QueryBlock, useOr: Boolean = false): Query {
         return on(joinCondition.toString(), useOr)
     }
 
-    fun on(joinCondition: String, useOr: Boolean = false): Query {
+    public fun on(joinCondition: String, useOr: Boolean = false): Query {
         if (tableToJoin.size > 0) {
             val tblName = tableToJoin.entries.last().key
             if (useOr) {
@@ -269,7 +261,7 @@ open class Query {
         return this
     }
 
-    fun onAnd(joinCondition: String): Query {
+    public fun onAnd(joinCondition: String): Query {
         if (tableToJoin.size > 0) {
             val tblName = tableToJoin.entries.last().key
             tableToJoin[tblName]?.add(And(joinCondition))
@@ -277,7 +269,7 @@ open class Query {
         return this
     }
 
-    fun onOr(joinCondition: String): Query {
+    public fun onOr(joinCondition: String): Query {
         if (tableToJoin.size > 0) {
             val tblName = tableToJoin.entries.last().key
             tableToJoin[tblName]?.add(Or(joinCondition))
@@ -285,7 +277,7 @@ open class Query {
         return this
     }
 
-    fun on(joinConditions: List<Condition>): Query {
+    public fun on(joinConditions: List<Condition>): Query {
         if (tableToJoin.size > 0) {
             val tblName = tableToJoin.entries.last().key
             tableToJoin[tblName]?.addAll(joinConditions)
@@ -293,7 +285,7 @@ open class Query {
         return this
     }
 
-    fun on(joinConditions: List<String>, useOr: Boolean = false): Query {
+    public fun on(joinConditions: List<String>, useOr: Boolean = false): Query {
         if (tableToJoin.size > 0) {
             val tblName = tableToJoin.entries.last().key
             for (joinCondition in joinConditions) {
@@ -307,21 +299,21 @@ open class Query {
         return this
     }
 
-    fun where(vararg blocks: QueryBlock): Query {
+    public fun where(vararg blocks: QueryBlock): Query {
         return whereAnd(*blocks)
     }
 
-    fun whereAnd(vararg blocks: QueryBlock): Query {
+    public fun whereAnd(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { whereCondition.add(And(it.toString())) }
         return this
     }
 
-    fun whereOr(vararg blocks: QueryBlock): Query {
+    public fun whereOr(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { whereCondition.add(Or(it.toString())) }
         return this
     }
 
-    fun whereMix(vararg conditions: Any): Query {
+    public fun whereMix(vararg conditions: Any): Query {
         (conditions as Array<Any>).forEach {
             if (it is String) {
                 where(it)
@@ -332,29 +324,29 @@ open class Query {
         return this
     }
 
-    fun where(vararg blocks: Any): Query {
+    public fun where(vararg blocks: Any): Query {
         (blocks as Array<Any>).forEach { whereCondition.add(And(it.toString())) }
         return this
     }
 
-    fun where(vararg blocks: String): Query {
+    public fun where(vararg blocks: String): Query {
         (blocks as Array<String>).forEach { whereCondition.add(And(it)) }
         return this
     }
 
-    fun where(queryBlock: QueryBlock, useOr: Boolean = false): Query {
+    public fun where(queryBlock: QueryBlock, useOr: Boolean = false): Query {
         return where(queryBlock.toString(), useOr)
     }
 
-    fun whereAnd(queryBlock: QueryBlock): Query {
+    public fun whereAnd(queryBlock: QueryBlock): Query {
         return whereAnd(queryBlock.toString())
     }
 
-    fun whereOr(queryBlock: QueryBlock): Query {
+    public fun whereOr(queryBlock: QueryBlock): Query {
         return whereOr(queryBlock.toString())
     }
 
-    fun where(condition: String, useOr: Boolean = false): Query {
+    public fun where(condition: String, useOr: Boolean = false): Query {
         if (useOr) {
             whereCondition.add(Or(condition))
         } else {
@@ -363,22 +355,22 @@ open class Query {
         return this
     }
 
-    fun whereAnd(condition: String): Query {
+    public fun whereAnd(condition: String): Query {
         whereCondition.add(And(condition))
         return this
     }
 
-    fun whereOr(condition: String): Query {
+    public fun whereOr(condition: String): Query {
         whereCondition.add(Or(condition))
         return this
     }
 
-    fun where(condition: List<Condition>): Query {
+    public fun where(condition: List<Condition>): Query {
         whereCondition.addAll(condition)
         return this
     }
 
-    fun where(conditions: List<String>, useOr: Boolean = false): Query {
+    public fun where(conditions: List<String>, useOr: Boolean = false): Query {
         for (condition in conditions) {
             if (useOr) {
                 whereCondition.add(Or(condition))
@@ -389,7 +381,7 @@ open class Query {
         return this
     }
 
-    fun groupByMain(vararg fields: String): Query {
+    public fun groupByMain(vararg fields: String): Query {
         addExpressionAfter(
             CustomPart.WHERE,
             QueryBlock("GROUP BY", if (fields.size == 1) fields[0] else fields.joinToString(", "))
@@ -397,22 +389,22 @@ open class Query {
         return this
     }
 
-    fun groupBy(vararg fields: String): Query {
+    public fun groupBy(vararg fields: String): Query {
         groupBys.addAll(fields as Array<String>)
         return this
     }
 
-    fun groupBy(field: String): Query {
+    public fun groupBy(field: String): Query {
         groupBys.add(field)
         return this
     }
 
-    fun groupBy(fields: List<String>): Query {
+    public fun groupBy(fields: List<String>): Query {
         groupBys.addAll(fields)
         return this
     }
 
-    fun havingMix(vararg conditions: Any): Query {
+    public fun havingMix(vararg conditions: Any): Query {
         (conditions as Array<Any>).forEach {
             if (it is String) {
                 having(it)
@@ -423,47 +415,47 @@ open class Query {
         return this
     }
 
-    fun having(vararg conditions: String): Query {
+    public fun having(vararg conditions: String): Query {
         return havingAnd(*conditions)
     }
 
-    fun havingAnd(vararg conditions: String): Query {
+    public fun havingAnd(vararg conditions: String): Query {
         (conditions as Array<String>).forEach { havingCondition.add(And(it)) }
         return this
     }
 
-    fun havingOr(vararg conditions: String): Query {
+    public fun havingOr(vararg conditions: String): Query {
         (conditions as Array<String>).forEach { havingCondition.add(Or(it)) }
         return this
     }
 
-    fun having(vararg blocks: QueryBlock): Query {
+    public fun having(vararg blocks: QueryBlock): Query {
         return havingAnd(*blocks)
     }
 
-    fun havingAnd(vararg blocks: QueryBlock): Query {
+    public fun havingAnd(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { havingCondition.add(And(it.toString())) }
         return this
     }
 
-    fun havingOr(vararg blocks: QueryBlock): Query {
+    public fun havingOr(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { havingCondition.add(Or(it.toString())) }
         return this
     }
 
-    fun having(queryBlock: QueryBlock, useOr: Boolean = false): Query {
+    public fun having(queryBlock: QueryBlock, useOr: Boolean = false): Query {
         return having(queryBlock.toString(), useOr)
     }
 
-    fun havingAnd(queryBlock: QueryBlock): Query {
+    public fun havingAnd(queryBlock: QueryBlock): Query {
         return havingAnd(queryBlock.toString())
     }
 
-    fun havingOr(queryBlock: QueryBlock): Query {
+    public fun havingOr(queryBlock: QueryBlock): Query {
         return havingOr(queryBlock.toString())
     }
 
-    fun having(condition: String, useOr: Boolean = false): Query {
+    public fun having(condition: String, useOr: Boolean = false): Query {
         if (useOr) {
             havingCondition.add(Or(condition))
         } else {
@@ -472,30 +464,30 @@ open class Query {
         return this
     }
 
-    fun havingAnd(condition: String): Query {
+    public fun havingAnd(condition: String): Query {
         havingCondition.add(And(condition))
         return this
     }
 
-    fun havingOr(condition: String): Query {
+    public fun havingOr(condition: String): Query {
         havingCondition.add(Or(condition))
         return this
     }
 
-    fun having(condition: List<Condition>): Query {
+    public fun having(condition: List<Condition>): Query {
         havingCondition.addAll(condition)
         return this
     }
 
-    fun order(vararg fields: String): Query {
+    public fun order(vararg fields: String): Query {
         return order(listOf(*fields))
     }
 
-    fun order(vararg fields: Sort): Query {
+    public fun order(vararg fields: Sort): Query {
         return order(listOf(*fields))
     }
 
-    fun order(field: String, useDesc: Boolean = false): Query {
+    public fun order(field: String, useDesc: Boolean = false): Query {
         if (useDesc) {
             orderBy.add(Desc(field))
         } else {
@@ -504,22 +496,22 @@ open class Query {
         return this
     }
 
-    fun orderAsc(field: String): Query {
+    public fun orderAsc(field: String): Query {
         orderBy.add(Asc(field))
         return this
     }
 
-    fun orderDesc(field: String): Query {
+    public fun orderDesc(field: String): Query {
         orderBy.add(Desc(field))
         return this
     }
 
-    fun order(fields: List<Sort>): Query {
+    public fun order(fields: List<Sort>): Query {
         orderBy.addAll(fields)
         return this
     }
 
-    fun order(fields: List<String>, useDesc: Boolean = false): Query {
+    public fun order(fields: List<String>, useDesc: Boolean = false): Query {
         for (field in fields) {
             if (useDesc) {
                 orderBy.add(Desc(field))
@@ -530,7 +522,7 @@ open class Query {
         return this
     }
 
-    fun limit(pageSize: Int, offset: Int = 0): Query {
+    public fun limit(pageSize: Int, offset: Int = 0): Query {
         limitOffset = arrayOf(pageSize, offset)
         return this
     }

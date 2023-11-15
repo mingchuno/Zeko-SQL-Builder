@@ -1,6 +1,8 @@
 package io.zeko.db.sql.connections
 
-import com.github.jasync.sql.db.*
+import com.github.jasync.sql.db.Configuration
+import com.github.jasync.sql.db.ConnectionPoolConfiguration
+import com.github.jasync.sql.db.ConnectionPoolConfigurationBuilder
 import com.github.jasync.sql.db.mysql.MySQLConnectionBuilder
 import com.github.jasync.sql.db.mysql.pool.MySQLConnectionFactory
 import com.github.jasync.sql.db.pool.ConnectionPool
@@ -10,23 +12,27 @@ import com.github.jasync.sql.db.util.size
 import io.vertx.core.json.JsonObject
 import java.nio.charset.Charset
 
-class JasyncDBPool : DBPool {
+public class JasyncDBPool : DBPool {
     private lateinit var client: ConnectionPool<*>
     private var insertStatementMode: Int = -1
 
-    constructor(json: JsonObject) {
+    public constructor(json: JsonObject) {
         init(json)
     }
 
-    constructor(client: ConnectionPool<*>) {
+    public constructor(client: ConnectionPool<*>) {
         this.client = client
     }
 
-    constructor(database: String, config: Configuration, poolConfig: ConnectionPoolConfiguration) {
+    public constructor(
+        database: String,
+        config: Configuration,
+        poolConfig: ConnectionPoolConfiguration
+    ) {
         init(database, config, poolConfig)
     }
 
-    constructor(database: String, config: ConnectionPoolConfigurationBuilder) {
+    public constructor(database: String, config: ConnectionPoolConfigurationBuilder) {
         init(database, config)
     }
 

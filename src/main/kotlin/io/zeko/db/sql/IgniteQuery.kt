@@ -1,9 +1,7 @@
 package io.zeko.db.sql
 
-class IgniteQuery : Query {
-    constructor(
-        espChar: String = "\"",
-        asChar: String = "=",
-        espTableName: Boolean = true
-    ) : super(espChar, asChar, espTableName)
-}
+public class IgniteQuery(
+    espChar: String = "\"",
+    asChar: String = "=",
+    espTableName: Boolean = true
+) : Query(espChar, asChar, espTableName)

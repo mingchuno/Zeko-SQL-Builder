@@ -1,30 +1,31 @@
 package io.zeko.db.sql.connections
 
-import com.github.jasync.sql.db.*
+import com.github.jasync.sql.db.QueryResult
+import com.github.jasync.sql.db.ResultSet
+import com.github.jasync.sql.db.SuspendingConnection
+import com.github.jasync.sql.db.asSuspending
 import com.github.jasync.sql.db.mysql.MySQLQueryResult
 import com.github.jasync.sql.db.pool.ConnectionPool
 import io.zeko.db.sql.exceptions.DuplicateKeyException
 import io.zeko.db.sql.exceptions.throwDuplicate
 import io.zeko.model.declarations.toMaps
-import java.lang.Exception
 import java.time.*
-import java.util.LinkedHashMap
 import kotlinx.coroutines.delay
 
-open class JasyncDBSession : DBSession {
+public open class JasyncDBSession : DBSession {
     protected var conn: DBConn
     protected var dbPool: DBPool
     protected var rawConn: Any
     protected var logger: DBLogger? = null
-    protected var throwOnDuplicate = true
+    protected var throwOnDuplicate: Boolean = true
 
-    constructor(dbPool: DBPool, conn: DBConn) {
+    public constructor(dbPool: DBPool, conn: DBConn) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw()
     }
 
-    constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
+    public constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw()
@@ -41,7 +42,7 @@ open class JasyncDBSession : DBSession {
         conn.close()
     }
 
-    fun suspendingConn(): SuspendingConnection {
+    public fun suspendingConn(): SuspendingConnection {
         val raw = conn.raw()
         if (raw is ConnectionPool<*>) {
             return raw.asSuspending

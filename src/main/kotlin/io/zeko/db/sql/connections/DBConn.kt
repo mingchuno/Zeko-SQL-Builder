@@ -1,15 +1,15 @@
 package io.zeko.db.sql.connections
 
-interface DBConn {
-    suspend fun beginTx()
+public interface DBConn {
+    public suspend fun beginTx()
 
-    suspend fun endTx()
+    public suspend fun endTx()
 
-    suspend fun commit()
+    public suspend fun commit()
 
-    suspend fun close()
+    public suspend fun close()
 
-    suspend fun rollback()
+    public suspend fun rollback()
 
-    fun raw(): Any
+    public fun raw(): Any
 }

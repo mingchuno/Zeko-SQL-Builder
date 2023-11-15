@@ -1,6 +1,6 @@
 package io.zeko.model
 
-enum class Type {
+public enum class Type {
     BOOL,
     INT,
     LONG,

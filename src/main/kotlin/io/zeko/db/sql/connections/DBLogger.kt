@@ -1,21 +1,21 @@
 package io.zeko.db.sql.connections
 
-interface DBLogger {
-    fun getSqlLogLevel(): DBLogLevel
+public interface DBLogger {
+    public fun getSqlLogLevel(): DBLogLevel
 
-    fun setSqlLogLevel(level: DBLogLevel): DBLogger
+    public fun setSqlLogLevel(level: DBLogLevel): DBLogger
 
-    fun getParamsLogLevel(): DBLogLevel
+    public fun getParamsLogLevel(): DBLogLevel
 
-    fun setParamsLogLevel(level: DBLogLevel): DBLogger
+    public fun setParamsLogLevel(level: DBLogLevel): DBLogger
 
-    fun setLogLevels(sqlLevel: DBLogLevel, paramsLevel: DBLogLevel): DBLogger
+    public fun setLogLevels(sqlLevel: DBLogLevel, paramsLevel: DBLogLevel): DBLogger
 
-    fun logQuery(sql: String, params: List<Any?>? = null)
+    public fun logQuery(sql: String, params: List<Any?>? = null)
 
-    fun logError(err: Exception)
+    public fun logError(err: Exception)
 
-    fun logUnsupportedSql(err: Exception)
+    public fun logUnsupportedSql(err: Exception)
 
-    fun logRetry(numRetriesLeft: Int, err: Exception)
+    public fun logRetry(numRetriesLeft: Int, err: Exception)
 }

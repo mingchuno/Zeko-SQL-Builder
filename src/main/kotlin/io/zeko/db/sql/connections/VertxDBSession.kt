@@ -10,28 +10,26 @@ import io.vertx.kotlin.ext.sql.updateWithParamsAwait
 import io.zeko.db.sql.exceptions.DuplicateKeyException
 import io.zeko.db.sql.exceptions.throwDuplicate
 import io.zeko.model.declarations.toMaps
-import java.lang.Exception
 import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
 import java.time.*
-import java.util.LinkedHashMap
 import kotlinx.coroutines.delay
 
-open class VertxDBSession : DBSession {
+public open class VertxDBSession : DBSession {
     protected var conn: DBConn
     protected var dbPool: DBPool
     protected var rawConn: SQLConnection
     protected var logger: DBLogger? = null
-    protected var throwOnDuplicate = true
+    protected var throwOnDuplicate: Boolean = true
 
-    constructor(dbPool: DBPool, conn: DBConn) {
+    public constructor(dbPool: DBPool, conn: DBConn) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw() as SQLConnection
     }
 
-    constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
+    public constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw() as SQLConnection

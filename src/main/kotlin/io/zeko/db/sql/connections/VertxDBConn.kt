@@ -6,7 +6,7 @@ import io.vertx.kotlin.ext.sql.commitAwait
 import io.vertx.kotlin.ext.sql.rollbackAwait
 import io.vertx.kotlin.ext.sql.setAutoCommitAwait
 
-class VertxDBConn(val conn: SQLConnection) : DBConn {
+public class VertxDBConn(private val conn: SQLConnection) : DBConn {
 
     override suspend fun beginTx() {
         conn.setAutoCommitAwait(false)

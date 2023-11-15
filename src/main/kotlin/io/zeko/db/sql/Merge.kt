@@ -3,17 +3,21 @@ package io.zeko.db.sql
 import io.zeko.db.sql.utilities.toSnakeCase
 import io.zeko.model.Entity
 
-open class Merge : DataManipulation {
+public open class Merge : DataManipulation {
     protected var select: Query? = null
     protected var insertFields: List<String>? = null
 
-    constructor(entity: Entity, parameterize: Boolean = false, espTableName: Boolean = false) {
+    public constructor(
+        entity: Entity,
+        parameterize: Boolean = false,
+        espTableName: Boolean = false
+    ) {
         this.entity = entity
         this.parameterize = parameterize
         this.espTableName = espTableName
     }
 
-    constructor(entity: Entity, vararg columns: String) {
+    public constructor(entity: Entity, vararg columns: String) {
         this.entity = entity
         this.insertFields = arrayListOf(*columns)
     }
@@ -23,15 +27,15 @@ open class Merge : DataManipulation {
         return this
     }
 
-    fun select(query: Query): Merge {
+    public fun select(query: Query): Merge {
         select = query
         return this
     }
 
     override fun toSql(): String {
         var sql = "MERGE INTO " + getTableName()
-        var columns = arrayListOf<String>()
-        var values = arrayListOf<String>()
+        val columns = arrayListOf<String>()
+        val values = arrayListOf<String>()
 
         if (entity.dataMap().isNotEmpty()) {
             val entries = entity.dataMap().entries

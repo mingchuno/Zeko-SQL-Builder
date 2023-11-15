@@ -2,7 +2,7 @@ package io.zeko.db.sql.connections
 
 import java.sql.Connection
 
-class HikariDBConn(val conn: Connection) : DBConn {
+public class HikariDBConn(private val conn: Connection) : DBConn {
     override suspend fun beginTx() {
         conn.autoCommit = false
     }

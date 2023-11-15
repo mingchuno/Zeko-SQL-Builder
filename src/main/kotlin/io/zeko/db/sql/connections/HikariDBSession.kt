@@ -4,35 +4,28 @@ import io.zeko.db.sql.exceptions.DuplicateKeyException
 import io.zeko.db.sql.exceptions.throwDuplicate
 import io.zeko.model.declarations.toMaps
 import java.io.InputStream
-import java.lang.Exception
 import java.math.BigDecimal
 import java.net.URL
-import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.Statement
-import java.sql.Timestamp
+import java.sql.*
 import java.time.*
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.collections.LinkedHashMap
+import java.util.Date
 import kotlinx.coroutines.delay
 import org.joda.time.LocalDateTime
 
-open class HikariDBSession : DBSession {
+public open class HikariDBSession : DBSession {
     protected var conn: DBConn
     protected var dbPool: DBPool
     protected var rawConn: Connection
     protected var logger: DBLogger? = null
-    protected var throwOnDuplicate = true
+    protected var throwOnDuplicate: Boolean = true
 
-    constructor(dbPool: DBPool, conn: DBConn) {
+    public constructor(dbPool: DBPool, conn: DBConn) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw() as Connection
     }
 
-    constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
+    public constructor(dbPool: DBPool, conn: DBConn, throwOnDuplicate: Boolean) {
         this.dbPool = dbPool
         this.conn = conn
         rawConn = conn.raw() as Connection

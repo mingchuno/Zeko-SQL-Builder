@@ -3,32 +3,32 @@ package io.zeko.db.sql
 import io.zeko.db.sql.utilities.toSnakeCase
 import io.zeko.model.Entity
 
-abstract class DataManipulation {
+public abstract class DataManipulation {
     protected lateinit var entity: Entity
-    protected var parameterize = false
-    protected var espTableName = false
+    protected var parameterize: Boolean = false
+    protected var espTableName: Boolean = false
 
-    open fun escapeTable(espTableName: Boolean): DataManipulation {
+    public open fun escapeTable(espTableName: Boolean): DataManipulation {
         this.espTableName = espTableName
         return this
     }
 
-    fun isTableNameEscaped(): Boolean {
+    public fun isTableNameEscaped(): Boolean {
         return this.espTableName
     }
 
-    fun getTableName(): String {
+    public fun getTableName(): String {
         var table =
-            (if (entity != null && !entity.tableName().isBlank()) entity.tableName()
+            (if (entity != null && entity.tableName().isNotBlank()) entity.tableName()
             else "" + entity::class.simpleName?.toSnakeCase())
         if (this.espTableName) table = "\"$table\""
         return table
     }
 
-    fun params(): List<Any> {
+    public fun params(): List<Any> {
         val values = arrayListOf<Any>()
         val entries = entity.dataMap().entries
-        for ((prop, value) in entries) {
+        for ((_, value) in entries) {
             if (value != null) {
                 values.add(value)
             }
@@ -36,11 +36,11 @@ abstract class DataManipulation {
         return values
     }
 
-    fun toMap(): MutableMap<String, Any?> {
+    public fun toMap(): MutableMap<String, Any?> {
         return entity.dataMap()
     }
 
-    open fun shouldIgnoreType(value: Any?): Boolean {
+    public open fun shouldIgnoreType(value: Any?): Boolean {
         return when (value) {
             is List<*> -> true
             is Array<*> -> true
@@ -51,5 +51,5 @@ abstract class DataManipulation {
         }
     }
 
-    open fun toSql(): String = ""
+    public open fun toSql(): String = ""
 }

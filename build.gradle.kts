@@ -53,6 +53,10 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 }
 
+kotlin {
+    explicitApi()
+}
+
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = "11"

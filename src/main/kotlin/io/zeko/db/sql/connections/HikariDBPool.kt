@@ -4,15 +4,15 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.vertx.core.json.JsonObject
 
-class HikariDBPool : DBPool {
+public class HikariDBPool : DBPool {
     private lateinit var ds: HikariDataSource
     private var insertStatementMode: Int = -1
 
-    constructor(json: JsonObject) {
+    public constructor(json: JsonObject) {
         init(json)
     }
 
-    constructor(config: HikariConfig) {
+    public constructor(config: HikariConfig) {
         init(config)
     }
 
@@ -48,7 +48,7 @@ class HikariDBPool : DBPool {
         ds = HikariDataSource(hkConfig)
     }
 
-    fun init(config: HikariConfig) {
+    public fun init(config: HikariConfig) {
         ds = HikariDataSource(config)
     }
 

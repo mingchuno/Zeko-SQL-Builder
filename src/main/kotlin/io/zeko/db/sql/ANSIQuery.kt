@@ -1,9 +1,4 @@
 package io.zeko.db.sql
 
-class ANSIQuery : Query {
-    constructor(
-        espChar: String = "\"",
-        asChar: String = "=",
-        espTableName: Boolean = true
-    ) : super(espChar, asChar, espTableName)
-}
+public class ANSIQuery(espChar: String = "\"", asChar: String = "=", espTableName: Boolean = true) :
+    Query(espChar, asChar, espTableName)

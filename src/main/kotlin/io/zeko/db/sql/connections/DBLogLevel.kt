@@ -1,6 +1,6 @@
 package io.zeko.db.sql.connections
 
-enum class DBLogLevel(val level: Int) {
+public enum class DBLogLevel(public val level: Int) {
     ALL(5),
     DEBUG(4),
     INFO(3),

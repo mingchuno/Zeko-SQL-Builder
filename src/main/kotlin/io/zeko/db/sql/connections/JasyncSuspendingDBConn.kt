@@ -2,7 +2,7 @@ package io.zeko.db.sql.connections
 
 import com.github.jasync.sql.db.SuspendingConnection
 
-class JasyncSuspendingDBConn(val conn: SuspendingConnection) : DBConn {
+public class JasyncSuspendingDBConn(private val conn: SuspendingConnection) : DBConn {
     override suspend fun beginTx() {
         conn.sendQuery("BEGIN")
     }

@@ -1,7 +1,6 @@
 package io.zeko.db.sql
 
-class Or : Condition {
-    constructor(logic: String) : super(logic)
+public class Or(logic: String) : Condition(logic) {
 
     override fun getOperator(): String = "OR"
 }

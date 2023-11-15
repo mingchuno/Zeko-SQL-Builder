@@ -1,6 +1,6 @@
 package io.zeko.db.sql
 
-enum class CustomPart {
+public enum class CustomPart {
     SELECT,
     FIELD,
     FROM,

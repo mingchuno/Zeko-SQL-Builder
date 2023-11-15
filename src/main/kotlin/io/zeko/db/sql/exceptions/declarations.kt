@@ -1,8 +1,6 @@
 package io.zeko.db.sql.exceptions
 
-import java.lang.Exception
-
-fun throwDuplicate(err: Exception) {
+internal fun throwDuplicate(err: Exception) {
     if (err.message!!.contains("duplicate", true)) {
         var column: String? = null
         var entry: String? = null

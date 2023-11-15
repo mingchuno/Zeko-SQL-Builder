@@ -1,8 +1,8 @@
 package io.zeko.db.sql.exceptions
 
-class DuplicateKeyException(
-    val column: String,
-    val entry: String? = null,
+internal class DuplicateKeyException(
+    private val column: String,
+    private val entry: String? = null,
     override val message: String? = null
 ) : Exception() {
     override fun toString(): String {
