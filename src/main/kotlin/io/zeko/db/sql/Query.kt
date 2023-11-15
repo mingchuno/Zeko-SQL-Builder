@@ -180,8 +180,10 @@ public open class Query {
         return this
     }
 
-    public fun fullJoin(table: Query, asName: String): Query {
-        tableToJoin["full-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun fullJoin(table: Query, asName: String): Query = fullJoin(table.toSql(), asName)
+
+    public fun fullJoin(table: String, asName: String): Query {
+        tableToJoin["full-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -190,8 +192,10 @@ public open class Query {
         return this
     }
 
-    public fun leftJoin(table: Query, asName: String): Query {
-        tableToJoin["left-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun leftJoin(table: Query, asName: String): Query = leftJoin(table.toSql(), asName)
+
+    public fun leftJoin(table: String, asName: String): Query {
+        tableToJoin["left-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -200,8 +204,11 @@ public open class Query {
         return this
     }
 
-    public fun leftOuterJoin(table: Query, asName: String): Query {
-        tableToJoin["left-@outer-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun leftOuterJoin(table: Query, asName: String): Query =
+        leftOuterJoin(table.toSql(), asName)
+
+    public fun leftOuterJoin(table: String, asName: String): Query {
+        tableToJoin["left-@outer-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -210,8 +217,10 @@ public open class Query {
         return this
     }
 
-    public fun rightJoin(table: Query, asName: String): Query {
-        tableToJoin["right-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun rightJoin(table: Query, asName: String): Query = rightJoin(table.toSql(), asName)
+
+    public fun rightJoin(table: String, asName: String): Query {
+        tableToJoin["right-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -220,8 +229,11 @@ public open class Query {
         return this
     }
 
-    public fun rightOuterJoin(table: Query, asName: String): Query {
-        tableToJoin["right-@outer-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun rightOuterJoin(table: Query, asName: String): Query =
+        rightOuterJoin(table.toSql(), asName)
+
+    public fun rightOuterJoin(table: String, asName: String): Query {
+        tableToJoin["right-@outer-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -230,8 +242,10 @@ public open class Query {
         return this
     }
 
-    public fun innerJoin(table: Query, asName: String): Query {
-        tableToJoin["inner-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun innerJoin(table: Query, asName: String): Query = innerJoin(table.toSql(), asName)
+
+    public fun innerJoin(table: String, asName: String): Query {
+        tableToJoin["inner-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
@@ -240,8 +254,10 @@ public open class Query {
         return this
     }
 
-    public fun crossJoin(table: Query, asName: String): Query {
-        tableToJoin["cross-@join-@**" + table.toSql() + "^^$asName"] = arrayListOf()
+    public fun crossJoin(table: Query, asName: String): Query = crossJoin(table.toSql(), asName)
+
+    public fun crossJoin(table: String, asName: String): Query {
+        tableToJoin["cross-@join-@**" + table + "^^$asName"] = arrayListOf()
         return this
     }
 
