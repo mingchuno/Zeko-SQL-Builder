@@ -18,7 +18,9 @@ abstract class DataManipulation {
     }
 
     fun getTableName(): String {
-        var table = (if (entity != null && !entity.tableName().isBlank()) entity.tableName() else "" + entity::class.simpleName?.toSnakeCase())
+        var table =
+            (if (entity != null && !entity.tableName().isBlank()) entity.tableName()
+            else "" + entity::class.simpleName?.toSnakeCase())
         if (this.espTableName) table = "\"$table\""
         return table
     }

@@ -15,8 +15,7 @@ class JasyncSuspendingDBConn(val conn: SuspendingConnection) : DBConn {
         conn.sendQuery("COMMIT")
     }
 
-    override suspend fun endTx() {
-    }
+    override suspend fun endTx() {}
 
     override fun raw(): Any {
         return conn

@@ -1,19 +1,25 @@
 package io.zeko.db.sql
 
 import java.util.*
-import kotlin.collections.HashMap
 
-data class QueryInfo(val sql: String, val columns: List<String>, val sqlFields: String, val parts: QueryParts)
+data class QueryInfo(
+    val sql: String,
+    val columns: List<String>,
+    val sqlFields: String,
+    val parts: QueryParts
+)
 
 class QueryParts {
-    private val rgxFindField = "([^\\\"\\ ][a-zA-Z0-9\\_]+[^\\\"\\ ])\\.([^\\\"\\s][a-zA-Z0-9\\_\\-\\=\\`\\~\\:\\.\\,\\|\\*\\^\\#\\@\\\$]+[\\^\"\\s])".toPattern()
+    private val rgxFindField =
+        "([^\\\"\\ ][a-zA-Z0-9\\_]+[^\\\"\\ ])\\.([^\\\"\\s][a-zA-Z0-9\\_\\-\\=\\`\\~\\:\\.\\,\\|\\*\\^\\#\\@\\\$]+[\\^\"\\s])"
+            .toPattern()
     var linebreak: String = " "
         get() = field
         set(value) {
             field = value
         }
 
-    var query:Query
+    var query: Query
     var fields: LinkedHashMap<String, Array<String>>
     var from: List<Any>
     var joins: LinkedHashMap<String, ArrayList<Condition>>
@@ -25,16 +31,16 @@ class QueryParts {
     var custom: EnumMap<CustomPart, List<QueryBlock>>
 
     constructor(
-            query:Query,
-            fields: LinkedHashMap<String, Array<String>>,
-            from: List<Any>,
-            joins: LinkedHashMap<String, ArrayList<Condition>>,
-            where: List<Condition>,
-            order: List<Sort>,
-            limit: Array<Int>?,
-            groupBys: List<String>,
-            havingCondition: List<Condition>,
-            customExpression: EnumMap<CustomPart, List<QueryBlock>>
+        query: Query,
+        fields: LinkedHashMap<String, Array<String>>,
+        from: List<Any>,
+        joins: LinkedHashMap<String, ArrayList<Condition>>,
+        where: List<Condition>,
+        order: List<Sort>,
+        limit: Array<Int>?,
+        groupBys: List<String>,
+        havingCondition: List<Condition>,
+        customExpression: EnumMap<CustomPart, List<QueryBlock>>
     ) {
         this.fields = fields
         this.query = query
@@ -102,19 +108,18 @@ class QueryParts {
             val parts = join.split("-@")
             val lastPart = parts.last()
             var asName = ""
-            val tbl = if (espTableName) {
-                if (lastPart.startsWith("**")) {
-                    asName = lastPart.substring(lastPart.indexOf("^^") + 2)
-                    "( ${lastPart.removePrefix("**").removeSuffix("^^$asName")} )"
-                } else
-                    "$esp$lastPart$esp"
-            } else {
-                if (lastPart.startsWith("**")) {
-                    asName = lastPart.substring(lastPart.indexOf("^^") + 2)
-                    "( ${lastPart.removePrefix("**").removeSuffix("^^$asName")} )"
-                } else
-                    lastPart
-            }
+            val tbl =
+                if (espTableName) {
+                    if (lastPart.startsWith("**")) {
+                        asName = lastPart.substring(lastPart.indexOf("^^") + 2)
+                        "( ${lastPart.removePrefix("**").removeSuffix("^^$asName")} )"
+                    } else "$esp$lastPart$esp"
+                } else {
+                    if (lastPart.startsWith("**")) {
+                        asName = lastPart.substring(lastPart.indexOf("^^") + 2)
+                        "( ${lastPart.removePrefix("**").removeSuffix("^^$asName")} )"
+                    } else lastPart
+                }
 
             val joinStmt = parts.subList(0, parts.size - 1).joinToString(" ").toUpperCase()
             var logicStmt = ""
@@ -151,7 +156,10 @@ class QueryParts {
         }
 
         if (wherePart != "") {
-            wherePart = linebreak + "WHERE" + wherePart.substring(0, wherePart.length - 3).replace("  ", " ")
+            wherePart =
+                linebreak +
+                    "WHERE" +
+                    wherePart.substring(0, wherePart.length - 3).replace("  ", " ")
         }
         return wherePart
     }
@@ -181,7 +189,10 @@ class QueryParts {
         }
 
         if (havingPart != "") {
-            havingPart = linebreak + "HAVING" + havingPart.substring(0, havingPart.length - 3).replace("  ", " ")
+            havingPart =
+                linebreak +
+                    "HAVING" +
+                    havingPart.substring(0, havingPart.length - 3).replace("  ", " ")
         }
         return havingPart
     }
@@ -200,7 +211,7 @@ class QueryParts {
     }
 
     private fun buildLimitOffsetPart(esp: String, espTableName: Boolean): String =
-            linebreak + if (limit != null) "LIMIT ${limit!![0]} OFFSET ${limit!![1]} " else ""
+        linebreak + if (limit != null) "LIMIT ${limit!![0]} OFFSET ${limit!![1]} " else ""
 
     fun precompile(): Array<String> {
         val (columns, sqlFields) = query.compileSelect()
@@ -215,7 +226,16 @@ class QueryParts {
         val orderPart = buildOrderByPart(esp, espTableName)
         val limitPart = buildLimitOffsetPart(esp, espTableName)
 
-        return arrayOf(sqlFields, fromPart, joinsPart, wherePart, groupByPart, havingPart, orderPart, limitPart)
+        return arrayOf(
+            sqlFields,
+            fromPart,
+            joinsPart,
+            wherePart,
+            groupByPart,
+            havingPart,
+            orderPart,
+            limitPart
+        )
     }
 
     fun compile(): String {
@@ -233,18 +253,14 @@ class QueryParts {
 
             if (custom.containsKey(partNames[idx])) {
                 val blocks = custom[partNames[idx]]
-                blocks?.forEach {
-                    parts += it.toString().trim() + " "
-                }
+                blocks?.forEach { parts += it.toString().trim() + " " }
             }
         }
 
         var sql = "SELECT "
         if (custom.containsKey(CustomPart.SELECT)) {
             val blocks = custom[CustomPart.SELECT]
-            blocks?.forEach {
-                sql += "$it "
-            }
+            blocks?.forEach { sql += "$it " }
             sql = sql.replace("  ", " ")
         }
 
@@ -252,9 +268,7 @@ class QueryParts {
 
         if (custom.containsKey(CustomPart.FIELD)) {
             val blocks = custom[CustomPart.SELECT]
-            blocks?.forEach {
-                sql += "$it "
-            }
+            blocks?.forEach { sql += "$it " }
             sql = sql.replace("  ", " ")
         }
 

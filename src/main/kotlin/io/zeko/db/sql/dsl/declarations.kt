@@ -2,7 +2,6 @@ package io.zeko.db.sql.dsl
 
 import io.zeko.db.sql.QueryBlock
 
-
 infix fun String.eq(value: String): QueryBlock {
     return io.zeko.db.sql.operators.eq(this, value)
 }
@@ -341,4 +340,3 @@ infix fun String.between(values: Pair<*, *>): QueryBlock {
     }
     return QueryBlock("", "")
 }
-

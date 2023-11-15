@@ -1,9 +1,9 @@
 package io.zeko.db.sql.exceptions
 
 class DuplicateKeyException(
-        val column: String,
-        val entry: String? = null,
-        override val message: String? = null
+    val column: String,
+    val entry: String? = null,
+    override val message: String? = null
 ) : Exception() {
     override fun toString(): String {
         if (entry.isNullOrEmpty()) {

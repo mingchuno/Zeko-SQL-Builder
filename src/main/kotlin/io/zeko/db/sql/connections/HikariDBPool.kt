@@ -32,8 +32,11 @@ class HikariDBPool : DBPool {
         if (config.containsKey("password")) {
             hkConfig.password = config.getString("password")
         }
-        hkConfig.maximumPoolSize = if (config.containsKey("max_pool_size")) config.getInteger("max_pool_size") else 15
-        hkConfig.minimumIdle = if (config.containsKey("initial_pool_size")) config.getInteger("initial_pool_size") else 3
+        hkConfig.maximumPoolSize =
+            if (config.containsKey("max_pool_size")) config.getInteger("max_pool_size") else 15
+        hkConfig.minimumIdle =
+            if (config.containsKey("initial_pool_size")) config.getInteger("initial_pool_size")
+            else 3
 
         if (config.containsKey("max_idle_time")) {
             hkConfig.maxLifetime = config.getLong("max_idle_time")
@@ -59,4 +62,3 @@ class HikariDBPool : DBPool {
         insertStatementMode = mode
     }
 }
-

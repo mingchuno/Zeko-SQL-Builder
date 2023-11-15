@@ -1,6 +1,5 @@
 package io.zeko.db.sql.utilities
 
-
 fun String.toSnakeCase(): String {
     var text: String = ""
     this.forEachIndexed { index, c ->
@@ -21,7 +20,7 @@ fun String.toCamelCase(): String {
     var camelCase = this.substring(0, 1).toLowerCase()
 
     if (this.length > 1) {
-        var wordStart = false;
+        var wordStart = false
 
         for (i in 1..(this.length - 1)) {
             var currChar = this[i]

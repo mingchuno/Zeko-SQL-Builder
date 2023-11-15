@@ -41,10 +41,8 @@ open class Insert : DataManipulation {
     }
 
     override fun toSql(): String {
-        var sql = if (ignore)
-            "INSERT IGNORE INTO " + getTableName()
-        else
-            "INSERT INTO " + getTableName()
+        var sql =
+            if (ignore) "INSERT IGNORE INTO " + getTableName() else "INSERT INTO " + getTableName()
 
         var columns = arrayListOf<String>()
         var values = arrayListOf<String>()
@@ -56,7 +54,7 @@ open class Insert : DataManipulation {
             for ((propName, value) in duplicateUpdateFields!!) {
                 if (value != null) {
                     if (parameterize) {
-                        if (value is QueryBlock){
+                        if (value is QueryBlock) {
                             onDuplicatePart.add("$propName = $value")
                         } else {
                             onDuplicatePart.add("$propName = ?")
@@ -64,7 +62,7 @@ open class Insert : DataManipulation {
                     } else {
                         if (value is String) {
                             onDuplicatePart.add("$propName = '${value.replace("'", "''")}'")
-                        } else if (value is QueryBlock){
+                        } else if (value is QueryBlock) {
                             onDuplicatePart.add("$propName = $value")
                         } else {
                             onDuplicatePart.add("$propName = $value")

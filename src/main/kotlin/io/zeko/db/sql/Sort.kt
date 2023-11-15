@@ -6,5 +6,6 @@ abstract class Sort {
     constructor(fieldName: String) {
         this.fieldName = fieldName
     }
+
     open fun getDirection(): String = "ASC"
 }

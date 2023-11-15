@@ -3,23 +3,17 @@
  *
  * This project uses @Incubating APIs which are subject to change.
  */
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-library`
     `maven-publish`
+    id("org.jetbrains.kotlin.jvm") version "1.9.20"
+    id("com.diffplug.spotless") version "6.22.0"
 }
 
 repositories {
-    maven {
-        url = uri("https://jcenter.bintray.com/")
-    }
-
-    maven {
-        url = uri("https://dl.bintray.com/spekframework/spek-dev")
-    }
-
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral()
 }
 
 dependencies {
@@ -40,14 +34,29 @@ dependencies {
     compileOnly("io.vertx:vertx-lang-kotlin:4.1.1")
 }
 
+tasks.withType<Test>().configureEach { useJUnitPlatform() }
+
+spotless { kotlin { ktfmt("0.46").kotlinlangStyle() } }
+
 group = "io.zeko"
 version = "1.4.1-SNAPSHOT"
 description = "io.zeko:zeko-sql-builder"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
     withJavadocJar()
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 publishing {

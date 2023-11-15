@@ -7,7 +7,7 @@ fun throwDuplicate(err: Exception) {
         var column: String? = null
         var entry: String? = null
 
-        //MySQL
+        // MySQL
         if (err.message!!.contains("Duplicate entry '")) {
             val rgxFindField = "\\'([^\\']+)\\'".toPattern()
             val matcher = rgxFindField.matcher(err.message)
@@ -20,7 +20,7 @@ fun throwDuplicate(err: Exception) {
                 }
             }
         }
-        //Apache Ignite/Ansi
+        // Apache Ignite/Ansi
         else if (err.message!!.startsWith("Duplicate key during")) {
             val rgxFindField = "\\[([^\\[\\]]+)\\]".toPattern()
             val matcher = rgxFindField.matcher(err.message)
@@ -33,7 +33,7 @@ fun throwDuplicate(err: Exception) {
             column = if (parts[0] == "key") "PRIMARY" else parts[0]
             entry = parts[1]
         }
-        //Postgres
+        // Postgres
         else if (err.message!!.contains("duplicate key value violates")) {
             val rgxFindField = "\\\"([^\\\"]+)\\\"".toPattern()
             val matcher = rgxFindField.matcher(err.message)

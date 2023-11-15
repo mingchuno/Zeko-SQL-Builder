@@ -8,5 +8,6 @@ abstract class Condition {
     }
 
     open fun getStatement(): String = logic
+
     open fun getOperator(): String = ""
 }

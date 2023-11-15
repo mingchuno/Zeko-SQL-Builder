@@ -3,12 +3,13 @@ package io.zeko.db.sql
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 open class Query {
     var espChar: String
         get() = field
+
     var asChar: String
         get() = field
+
     var espTableName: Boolean
         get() = field
 
@@ -16,43 +17,29 @@ open class Query {
 
     private val tableFrom = arrayListOf<Any>()
 
-    private val fieldsToSelect by lazy {
-        LinkedHashMap<String, Array<String>>()
-    }
+    private val fieldsToSelect by lazy { LinkedHashMap<String, Array<String>>() }
 
-    private val tableToJoin by lazy {
-        LinkedHashMap<String, ArrayList<Condition>>()
-    }
+    private val tableToJoin by lazy { LinkedHashMap<String, ArrayList<Condition>>() }
 
-    private val whereCondition by lazy {
-        arrayListOf<Condition>()
-    }
+    private val whereCondition by lazy { arrayListOf<Condition>() }
 
-    private val groupBys by lazy {
-        arrayListOf<String>()
-    }
+    private val groupBys by lazy { arrayListOf<String>() }
 
-    private val havingCondition by lazy {
-        arrayListOf<Condition>()
-    }
+    private val havingCondition by lazy { arrayListOf<Condition>() }
 
-    private val orderBy by lazy {
-        arrayListOf<Sort>()
-    }
+    private val orderBy by lazy { arrayListOf<Sort>() }
 
-    private val expression by lazy {
-        EnumMap<CustomPart, List<QueryBlock>>(CustomPart::class.java)
-    }
+    private val expression by lazy { EnumMap<CustomPart, List<QueryBlock>>(CustomPart::class.java) }
 
     private var limitOffset: Array<Int>? = null
 
-    constructor(espChar: String =  "`", asChar: String = "=", espTableName: Boolean = false) {
+    constructor(espChar: String = "`", asChar: String = "=", espTableName: Boolean = false) {
         this.espChar = espChar
         this.asChar = asChar
         this.espTableName = espTableName
     }
 
-    constructor(espChar: String =  "`", espTableName: Boolean = false) {
+    constructor(espChar: String = "`", espTableName: Boolean = false) {
         this.espChar = espChar
         this.asChar = "="
         this.espTableName = espTableName
@@ -111,7 +98,19 @@ open class Query {
     }
 
     fun toParts(shouldLineBreak: Boolean = false): QueryParts {
-        val parts = QueryParts(this, fieldsToSelect, tableFrom, tableToJoin, whereCondition, orderBy, limitOffset, groupBys, havingCondition, expression)
+        val parts =
+            QueryParts(
+                this,
+                fieldsToSelect,
+                tableFrom,
+                tableToJoin,
+                whereCondition,
+                orderBy,
+                limitOffset,
+                groupBys,
+                havingCondition,
+                expression
+            )
         if (shouldLineBreak) {
             parts.linebreak = "\n"
         }
@@ -313,16 +312,12 @@ open class Query {
     }
 
     fun whereAnd(vararg blocks: QueryBlock): Query {
-        (blocks as Array<QueryBlock>).forEach {
-            whereCondition.add(And(it.toString()))
-        }
+        (blocks as Array<QueryBlock>).forEach { whereCondition.add(And(it.toString())) }
         return this
     }
 
     fun whereOr(vararg blocks: QueryBlock): Query {
-        (blocks as Array<QueryBlock>).forEach {
-            whereCondition.add(Or(it.toString()))
-        }
+        (blocks as Array<QueryBlock>).forEach { whereCondition.add(Or(it.toString())) }
         return this
     }
 
@@ -330,7 +325,7 @@ open class Query {
         (conditions as Array<Any>).forEach {
             if (it is String) {
                 where(it)
-            } else if (it is QueryBlock){
+            } else if (it is QueryBlock) {
                 where(it)
             }
         }
@@ -338,16 +333,12 @@ open class Query {
     }
 
     fun where(vararg blocks: Any): Query {
-        (blocks as Array<Any>).forEach {
-            whereCondition.add(And(it.toString()))
-        }
+        (blocks as Array<Any>).forEach { whereCondition.add(And(it.toString())) }
         return this
     }
 
     fun where(vararg blocks: String): Query {
-        (blocks as Array<String>).forEach {
-            whereCondition.add(And(it))
-        }
+        (blocks as Array<String>).forEach { whereCondition.add(And(it)) }
         return this
     }
 
@@ -399,7 +390,10 @@ open class Query {
     }
 
     fun groupByMain(vararg fields: String): Query {
-        addExpressionAfter(CustomPart.WHERE, QueryBlock("GROUP BY", if (fields.size == 1) fields[0] else fields.joinToString(", ")))
+        addExpressionAfter(
+            CustomPart.WHERE,
+            QueryBlock("GROUP BY", if (fields.size == 1) fields[0] else fields.joinToString(", "))
+        )
         return this
     }
 
@@ -422,7 +416,7 @@ open class Query {
         (conditions as Array<Any>).forEach {
             if (it is String) {
                 having(it)
-            } else if (it is QueryBlock){
+            } else if (it is QueryBlock) {
                 having(it)
             }
         }
@@ -434,16 +428,12 @@ open class Query {
     }
 
     fun havingAnd(vararg conditions: String): Query {
-        (conditions as Array<String>).forEach {
-            havingCondition.add(And(it))
-        }
+        (conditions as Array<String>).forEach { havingCondition.add(And(it)) }
         return this
     }
 
     fun havingOr(vararg conditions: String): Query {
-        (conditions as Array<String>).forEach {
-            havingCondition.add(Or(it))
-        }
+        (conditions as Array<String>).forEach { havingCondition.add(Or(it)) }
         return this
     }
 
@@ -452,16 +442,12 @@ open class Query {
     }
 
     fun havingAnd(vararg blocks: QueryBlock): Query {
-        (blocks as Array<QueryBlock>).forEach {
-            havingCondition.add(And(it.toString()))
-        }
+        (blocks as Array<QueryBlock>).forEach { havingCondition.add(And(it.toString())) }
         return this
     }
 
     fun havingOr(vararg blocks: QueryBlock): Query {
-        (blocks as Array<QueryBlock>).forEach {
-            havingCondition.add(Or(it.toString()))
-        }
+        (blocks as Array<QueryBlock>).forEach { havingCondition.add(Or(it.toString())) }
         return this
     }
 
@@ -500,7 +486,6 @@ open class Query {
         havingCondition.addAll(condition)
         return this
     }
-
 
     fun order(vararg fields: String): Query {
         return order(listOf(*fields))
@@ -549,5 +534,4 @@ open class Query {
         limitOffset = arrayOf(pageSize, offset)
         return this
     }
-
 }

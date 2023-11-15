@@ -2,7 +2,6 @@ package io.zeko.db.sql.aggregations
 
 import io.zeko.db.sql.QueryBlock
 
-
 fun sum(field: String): QueryBlock {
     return QueryBlock("SUM( ", field, " ) ")
 }
@@ -146,7 +145,6 @@ fun maxLe(field: String, value: Int): QueryBlock {
 fun agg(funcName: String, field: String, operator: String, value: Int): QueryBlock {
     return QueryBlock("$funcName(", field, ") $operator $value")
 }
-
 
 fun sumEq(field: String, value: Long): QueryBlock {
     return agg("SUM", field, "=", value)

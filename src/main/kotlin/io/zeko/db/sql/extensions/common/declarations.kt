@@ -4,7 +4,6 @@ import io.zeko.db.sql.CustomPart
 import io.zeko.db.sql.Query
 import io.zeko.db.sql.QueryBlock
 
-
 fun Query.forUpdate(): Query {
     this.addExpressionAfter(CustomPart.LIMIT, QueryBlock("FOR UPDATE"))
     return this

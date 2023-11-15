@@ -31,7 +31,7 @@ class JasyncDBPool : DBPool {
     }
 
     private fun getConfigFromURL(url: String): Pair<String, ConnectionPoolConfigurationBuilder> {
-        //eg. "jdbc:mysql://localhost:3306/zeko_test?user=root&password=123456"
+        // eg. "jdbc:mysql://localhost:3306/zeko_test?user=root&password=123456"
         val config = hashMapOf<String, String>()
         val noJdbc = url.substring(5)
         val parts = noJdbc.split("/")
@@ -52,29 +52,32 @@ class JasyncDBPool : DBPool {
                 config[key] = value
             }
         }
-        var charset: Charset = if (config.containsKey("characterEncoding")) Charset.forName(config["characterEncoding"]) else Charset.forName("utf-8")
+        var charset: Charset =
+            if (config.containsKey("characterEncoding"))
+                Charset.forName(config["characterEncoding"])
+            else Charset.forName("utf-8")
 
-        val dbConfig = ConnectionPoolConfigurationBuilder().apply {
-            host = config["host"]!!
-            port = config["port"]!!.toInt()
-            database = config["database"]!!
-            username = config["user"]!!
-            charset = charset
-            if (config.containsKey("password"))
-                password = config["password"]!!
-            if (config.containsKey("queryTimeout"))
-                queryTimeout = config["queryTimeout"].toString().toLong()
-            if (config.containsKey("maxIdleTime"))
-                maxIdleTime = config["queryTimeout"].toString().toLong()
-            if (config.containsKey("maxConnectionTtl"))
-                maxConnectionTtl = config["maxConnectionTtl"].toString().toLong()
-            if (config.containsKey("maxActiveConnections"))
-                maxActiveConnections = config["maxActiveConnections"].toString().toInt()
-            if (config.containsKey("maxPendingQueries"))
-                maxPendingQueries = config["maxPendingQueries"].toString().toInt()
-            if (config.containsKey("maximumMessageSize"))
-                maximumMessageSize = config["maximumMessageSize"].toString().toInt()
-        }
+        val dbConfig =
+            ConnectionPoolConfigurationBuilder().apply {
+                host = config["host"]!!
+                port = config["port"]!!.toInt()
+                database = config["database"]!!
+                username = config["user"]!!
+                charset = charset
+                if (config.containsKey("password")) password = config["password"]!!
+                if (config.containsKey("queryTimeout"))
+                    queryTimeout = config["queryTimeout"].toString().toLong()
+                if (config.containsKey("maxIdleTime"))
+                    maxIdleTime = config["queryTimeout"].toString().toLong()
+                if (config.containsKey("maxConnectionTtl"))
+                    maxConnectionTtl = config["maxConnectionTtl"].toString().toLong()
+                if (config.containsKey("maxActiveConnections"))
+                    maxActiveConnections = config["maxActiveConnections"].toString().toInt()
+                if (config.containsKey("maxPendingQueries"))
+                    maxPendingQueries = config["maxPendingQueries"].toString().toInt()
+                if (config.containsKey("maximumMessageSize"))
+                    maximumMessageSize = config["maximumMessageSize"].toString().toInt()
+            }
         return (databaseType to dbConfig)
     }
 
@@ -128,11 +131,20 @@ class JasyncDBPool : DBPool {
         }
     }
 
-    private fun init(database: String, config: Configuration, poolConfig: ConnectionPoolConfiguration) {
+    private fun init(
+        database: String,
+        config: Configuration,
+        poolConfig: ConnectionPoolConfiguration
+    ) {
         if (database == "mysql") {
-            client = ConnectionPool(factory = MySQLConnectionFactory(config), configuration = poolConfig)
+            client =
+                ConnectionPool(factory = MySQLConnectionFactory(config), configuration = poolConfig)
         } else {
-            client = ConnectionPool(factory = PostgreSQLConnectionFactory(config), configuration = poolConfig)
+            client =
+                ConnectionPool(
+                    factory = PostgreSQLConnectionFactory(config),
+                    configuration = poolConfig
+                )
         }
     }
 

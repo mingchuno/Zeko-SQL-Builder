@@ -2,7 +2,6 @@ package io.zeko.db.sql.operators
 
 import io.zeko.db.sql.QueryBlock
 
-
 fun eq(field: String, value: String, useRawValue: Boolean = false): QueryBlock {
     return QueryBlock(field, "=", if (useRawValue) value else "?")
 }
@@ -46,12 +45,15 @@ fun neq(field: String, value: Any): QueryBlock {
 fun greater(field: String, field2: String): QueryBlock {
     return QueryBlock(field, ">", field2)
 }
+
 fun greaterEq(field: String, field2: String): QueryBlock {
     return QueryBlock(field, ">=", field2)
 }
+
 fun less(field: String, field2: String): QueryBlock {
     return QueryBlock(field, "<", field2)
 }
+
 fun lessEq(field: String, field2: String): QueryBlock {
     return QueryBlock(field, "<=", field2)
 }
@@ -59,12 +61,15 @@ fun lessEq(field: String, field2: String): QueryBlock {
 fun greater(field: String, value: Int): QueryBlock {
     return QueryBlock(field, ">", value.toString())
 }
+
 fun greaterEq(field: String, value: Int): QueryBlock {
     return QueryBlock(field, ">=", value.toString())
 }
+
 fun less(field: String, value: Int): QueryBlock {
     return QueryBlock(field, "<", value.toString())
 }
+
 fun lessEq(field: String, value: Int): QueryBlock {
     return QueryBlock(field, "<=", value.toString())
 }
@@ -72,12 +77,15 @@ fun lessEq(field: String, value: Int): QueryBlock {
 fun greater(field: String, value: Long): QueryBlock {
     return QueryBlock(field, ">", value.toString())
 }
+
 fun greaterEq(field: String, value: Long): QueryBlock {
     return QueryBlock(field, ">=", value.toString())
 }
+
 fun less(field: String, value: Long): QueryBlock {
     return QueryBlock(field, "<", value.toString())
 }
+
 fun lessEq(field: String, value: Long): QueryBlock {
     return QueryBlock(field, "<=", value.toString())
 }
@@ -85,12 +93,15 @@ fun lessEq(field: String, value: Long): QueryBlock {
 fun greater(field: String, value: Double): QueryBlock {
     return QueryBlock(field, ">", value.toString())
 }
+
 fun greaterEq(field: String, value: Double): QueryBlock {
     return QueryBlock(field, ">=", value.toString())
 }
+
 fun less(field: String, value: Double): QueryBlock {
     return QueryBlock(field, "<", value.toString())
 }
+
 fun lessEq(field: String, value: Double): QueryBlock {
     return QueryBlock(field, "<=", value.toString())
 }
@@ -98,12 +109,15 @@ fun lessEq(field: String, value: Double): QueryBlock {
 fun greater(field: String, value: Any): QueryBlock {
     return QueryBlock(field, ">", "?")
 }
+
 fun greaterEq(field: String, value: Any): QueryBlock {
     return QueryBlock(field, ">=", "?")
 }
+
 fun less(field: String, value: Any): QueryBlock {
     return QueryBlock(field, "<", "?")
 }
+
 fun lessEq(field: String, value: Any): QueryBlock {
     return QueryBlock(field, "<=", "?")
 }
@@ -139,7 +153,11 @@ fun match(field: String, search: String, useRawValue: Boolean): QueryBlock {
 
 fun match(field: List<String>, search: String, useRawValue: Boolean): QueryBlock {
     val value = if (useRawValue) "'${search.replace("'", "''")}'" else "?"
-    return QueryBlock("MATCH( ", field.joinToString(","), ") AGAINST ( $value IN NATURAL LANGUAGE MODE )")
+    return QueryBlock(
+        "MATCH( ",
+        field.joinToString(","),
+        ") AGAINST ( $value IN NATURAL LANGUAGE MODE )"
+    )
 }
 
 fun match(field: String, search: String, mode: String = "NATURAL LANGUAGE MODE"): QueryBlock {
@@ -150,7 +168,12 @@ fun match(field: List<String>, search: String, mode: String = "NATURAL LANGUAGE 
     return QueryBlock("MATCH( ", field.joinToString(","), ") AGAINST ( ? IN $mode )")
 }
 
-fun between(field: String, value1: String, value2: String, useRawValue: Boolean = false): QueryBlock {
+fun between(
+    field: String,
+    value1: String,
+    value2: String,
+    useRawValue: Boolean = false
+): QueryBlock {
     if (!useRawValue) {
         return QueryBlock("$field BETWEEN ", "?", " AND ?")
     }
@@ -172,6 +195,7 @@ fun between(field: String, value1: Double, value2: Double): QueryBlock {
 fun isNotNull(stmt: String): QueryBlock {
     return QueryBlock(stmt, "IS NOT NULL")
 }
+
 fun isNull(stmt: String): QueryBlock {
     return QueryBlock(stmt, "IS NULL")
 }
@@ -256,10 +280,10 @@ fun notInList(stmt: String, values: Array<*>): QueryBlock {
     return QueryBlock(stmt, "NOT IN", "($valEsp)")
 }
 
-fun sub(value: QueryBlock) : QueryBlock {
+fun sub(value: QueryBlock): QueryBlock {
     return QueryBlock("( ", value.toString(), " )")
 }
 
-fun sub(value: String) : QueryBlock {
+fun sub(value: String): QueryBlock {
     return QueryBlock("( ", value, " )")
 }
