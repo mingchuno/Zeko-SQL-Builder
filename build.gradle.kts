@@ -12,26 +12,24 @@ plugins {
     id("com.diffplug.spotless") version "6.22.0"
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
-    api("io.vertx:vertx-core:4.1.1")
-    api("joda-time:joda-time:2.9.7")
-    api("io.zeko:zeko-data-mapper:1.6.7")
-    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20")
-    testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.6.20")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.9")
-    testImplementation("org.spekframework.spek2:spek-runner-junit5:2.0.9")
-    compileOnly("io.vertx:vertx-jdbc-client:4.1.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    implementation("io.vertx:vertx-core:4.3.8")
+    implementation("joda-time:joda-time:2.9.7")
+    implementation("io.zeko:zeko-data-mapper:1.6.7")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.20")
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.19")
+    testImplementation("org.spekframework.spek2:spek-runner-junit5:2.0.19")
+    compileOnly("io.vertx:vertx-jdbc-client:4.3.8")
     compileOnly("com.github.jasync-sql:jasync-postgresql:1.2.3")
     compileOnly("com.github.jasync-sql:jasync-mysql:1.2.3")
-    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.11.4")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.12.7.1")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
-    compileOnly("io.vertx:vertx-lang-kotlin:4.1.1")
+    compileOnly("io.vertx:vertx-lang-kotlin:4.3.8")
 }
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
@@ -39,7 +37,9 @@ tasks.withType<Test>().configureEach { useJUnitPlatform() }
 spotless { kotlin { ktfmt("0.46").kotlinlangStyle() } }
 
 group = "io.zeko"
+
 version = "1.4.1-SNAPSHOT"
+
 description = "io.zeko:zeko-sql-builder"
 
 java {
@@ -49,30 +49,14 @@ java {
     withJavadocJar()
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
-}
+java { toolchain.languageVersion.set(JavaLanguageVersion.of(11)) }
 
-kotlin {
-    explicitApi()
-}
+kotlin { explicitApi() }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-}
+tasks.withType<KotlinCompile>().configureEach { kotlinOptions { jvmTarget = "11" } }
 
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
+publishing { publications.create<MavenPublication>("maven") { from(components["java"]) } }
 
-tasks.withType<JavaCompile>() {
-    options.encoding = "UTF-8"
-}
+tasks.withType<JavaCompile>() { options.encoding = "UTF-8" }
 
-tasks.withType<Javadoc>() {
-    options.encoding = "UTF-8"
-}
+tasks.withType<Javadoc>() { options.encoding = "UTF-8" }
