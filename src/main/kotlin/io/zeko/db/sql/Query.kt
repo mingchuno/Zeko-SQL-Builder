@@ -41,7 +41,11 @@ public open class Query {
     }
 
     public fun fields(vararg names: String): Query {
-        fieldsToSelect[currentTable] = names as Array<String>
+        return fields(names.toList())
+    }
+
+    public fun fields(names: Collection<String>): Query {
+        fieldsToSelect[currentTable] = names.toTypedArray()
         return this
     }
 
@@ -315,14 +319,22 @@ public open class Query {
         return this
     }
 
-    public fun where(vararg blocks: QueryBlock): Query {
-        return whereAnd(*blocks)
+    public fun where(blocks: Collection<QueryBlock>): Query {
+        return whereAnd(*blocks.toTypedArray())
     }
+
+    public fun where(vararg blocks: QueryBlock): Query {
+        return where(blocks.toList())
+    }
+
+    public fun whereAnd(blocks: Collection<QueryBlock>): Query = whereAnd(*blocks.toTypedArray())
 
     public fun whereAnd(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { whereCondition.add(And(it.toString())) }
         return this
     }
+
+    public fun whereOr(blocks: Collection<QueryBlock>): Query = whereOr(*blocks.toTypedArray())
 
     public fun whereOr(vararg blocks: QueryBlock): Query {
         (blocks as Array<QueryBlock>).forEach { whereCondition.add(Or(it.toString())) }

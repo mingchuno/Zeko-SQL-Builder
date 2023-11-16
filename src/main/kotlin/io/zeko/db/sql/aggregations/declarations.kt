@@ -3,23 +3,23 @@ package io.zeko.db.sql.aggregations
 import io.zeko.db.sql.QueryBlock
 
 public fun sum(field: String): QueryBlock {
-    return QueryBlock("SUM( ", field, " ) ")
+    return QueryBlock("SUM(", field, ")")
 }
 
 public fun count(field: String): QueryBlock {
-    return QueryBlock("COUNT( ", field, " ) ")
+    return QueryBlock("COUNT(", field, ")")
 }
 
 public fun avg(field: String): QueryBlock {
-    return QueryBlock("AVG( ", field, " ) ")
+    return QueryBlock("AVG(", field, ")")
 }
 
 public fun min(field: String): QueryBlock {
-    return QueryBlock("MIN( ", field, " ) ")
+    return QueryBlock("MIN(", field, ")")
 }
 
 public fun max(field: String): QueryBlock {
-    return QueryBlock("MAX( ", field, " ) ")
+    return QueryBlock("MAX(", field, ")")
 }
 
 public fun sum(field: String, value: Int): QueryBlock {

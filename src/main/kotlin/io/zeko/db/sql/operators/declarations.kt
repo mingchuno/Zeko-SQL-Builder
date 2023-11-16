@@ -2,6 +2,8 @@ package io.zeko.db.sql.operators
 
 import io.zeko.db.sql.QueryBlock
 
+public fun `as`(field: String, alias: String): QueryBlock = QueryBlock(field, "AS", alias)
+
 public fun eq(field: String, value: String, useRawValue: Boolean = false): QueryBlock {
     return QueryBlock(field, "=", if (useRawValue) value else "?")
 }

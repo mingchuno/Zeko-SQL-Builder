@@ -2,6 +2,8 @@ package io.zeko.db.sql.dsl
 
 import io.zeko.db.sql.QueryBlock
 
+public infix fun String.`as`(alias: String): QueryBlock = io.zeko.db.sql.operators.`as`(this, alias)
+
 public infix fun String.eq(value: String): QueryBlock {
     return io.zeko.db.sql.operators.eq(this, value)
 }
@@ -120,6 +122,10 @@ public infix fun String.less(value: Any): QueryBlock {
 
 public infix fun String.lessEq(value: Any): QueryBlock {
     return io.zeko.db.sql.operators.lessEq(this, value)
+}
+
+public infix fun QueryBlock.`as`(alias: String): QueryBlock {
+    return io.zeko.db.sql.operators.`as`(this.toString(), alias)
 }
 
 public infix fun QueryBlock.eq(value: String): QueryBlock {
