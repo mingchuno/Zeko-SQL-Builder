@@ -136,7 +136,7 @@ internal class QueryParts {
                     if (espTableName) {
                         asName = "$esp$asName$esp"
                     }
-                    joinsPart += linebreak + "$joinStmt $tbl as $asName ON ($logicStmt)"
+                    joinsPart += linebreak + "$joinStmt $tbl AS $asName ON ($logicStmt)"
                 } else {
                     joinsPart += linebreak + "$joinStmt $tbl ON ($logicStmt)"
                 }

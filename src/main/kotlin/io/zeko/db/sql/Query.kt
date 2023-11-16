@@ -68,20 +68,20 @@ public open class Query {
                     }
                     val selfCol = parts[1].trim()
                     if (tbl == "") {
-                        selectFields.add("$colName")
+                        selectFields.add(colName)
                     } else {
                         val aliasName = "$tbl-$selfCol"
                         columns.add(aliasName)
-                        selectFields.add("$tblLinkedCol as $espChar$aliasName$espChar")
+                        selectFields.add("$tblLinkedCol AS $espChar$aliasName$espChar")
                     }
                 } else {
                     if (tbl == "") {
-                        selectFields.add("$colName")
+                        selectFields.add(colName)
                     } else {
                         val aliasName = "$tbl-$colName"
                         columns.add(aliasName)
                         val tblFinal = if (espTableName) "$espChar$tbl$espChar" else tbl
-                        selectFields.add("$tblFinal.$colName as $espChar$aliasName$espChar")
+                        selectFields.add("$tblFinal.$colName AS $espChar$aliasName$espChar")
                     }
                 }
             }

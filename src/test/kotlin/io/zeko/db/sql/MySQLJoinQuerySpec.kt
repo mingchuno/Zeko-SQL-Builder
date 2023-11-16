@@ -1,6 +1,7 @@
 package io.zeko.db.sql
 
-import io.zeko.db.sql.aggregations.*
+import io.zeko.db.sql.aggregations.count
+import io.zeko.db.sql.aggregations.sumGt
 import io.zeko.db.sql.dsl.*
 import io.zeko.db.sql.operators.isNotNull
 import kotlin.test.assertEquals
@@ -68,7 +69,7 @@ class MySQLJoinQuerySpec :
                             .toSql()
                     debug(sql)
                     assertEquals(
-                        "SELECT user.id as `user-id`, user.name as `user-name`, address.id as `address-id`, address.street1 as `address-street1`, address.street2 as `address-street2`, user.id as `address-user_id` FROM user LEFT JOIN address ON (address.user_id = user.id ) WHERE user.status > 0 OR user.id IS NOT NULL ORDER BY user.name DESC",
+                        "SELECT user.id AS `user-id`, user.name AS `user-name`, address.id AS `address-id`, address.street1 AS `address-street1`, address.street2 AS `address-street2`, user.id AS `address-user_id` FROM user LEFT JOIN address ON (address.user_id = user.id ) WHERE user.status > 0 OR user.id IS NOT NULL ORDER BY user.name DESC",
                         sql
                     )
                 }
@@ -96,7 +97,7 @@ class MySQLJoinQuerySpec :
                             .toSql()
                     debug(sql)
                     assertEquals(
-                        "SELECT user.id as `user-id`, user.name as `user-name`, role.id as `role-id`, role.role_name as `role-role_name`, user.id as `role-user_id`, address.id as `address-id`, address.street1 as `address-street1`, address.street2 as `address-street2`, user.id as `address-user_id` FROM user LEFT JOIN address ON (address.user_id = user.id ) LEFT JOIN user_has_role ON (user_has_role.user_id = user.id ) LEFT JOIN role ON (role.id = user_has_role.role_id ) WHERE user.status > 0 OR user.id NOT IN (1,2,3) ORDER BY user.id ASC",
+                        "SELECT user.id AS `user-id`, user.name AS `user-name`, role.id AS `role-id`, role.role_name AS `role-role_name`, user.id AS `role-user_id`, address.id AS `address-id`, address.street1 AS `address-street1`, address.street2 AS `address-street2`, user.id AS `address-user_id` FROM user LEFT JOIN address ON (address.user_id = user.id ) LEFT JOIN user_has_role ON (user_has_role.user_id = user.id ) LEFT JOIN role ON (role.id = user_has_role.role_id ) WHERE user.status > 0 OR user.id NOT IN (1,2,3) ORDER BY user.id ASC",
                         sql
                     )
                 }
@@ -132,9 +133,9 @@ class MySQLJoinQuerySpec :
                             .toSql()
                     debug(sql)
                     assertEquals(
-                        "SELECT user.id as `user-id`, user.name as `user-name`, role.id as `role-id`, " +
-                            "role.role_name as `role-role_name`, user.id as `role-user_id`, address.id as `address-id`, " +
-                            "address.street1 as `address-street1`, address.street2 as `address-street2`, user.id as " +
+                        "SELECT user.id AS `user-id`, user.name AS `user-name`, role.id AS `role-id`, " +
+                            "role.role_name AS `role-role_name`, user.id AS `role-user_id`, address.id AS `address-id`, " +
+                            "address.street1 AS `address-street1`, address.street2 AS `address-street2`, user.id AS " +
                             "`address-user_id` FROM (SELECT * FROM user WHERE id <= 100 AND age > 50 " +
                             "ORDER BY user.id ASC LIMIT 10 OFFSET 0) AS user LEFT JOIN address ON (address.user_id = user.id ) " +
                             "LEFT JOIN user_has_role ON (user_has_role.user_id = user.id ) " +
@@ -171,9 +172,9 @@ class MySQLJoinQuerySpec :
                             .toSql()
                     debug(sql)
                     assertEquals(
-                        "SELECT user.id as `user-id`, user.name as `user-name`, role.id as `role-id`, " +
-                            "role.role_name as `role-role_name`, user.id as `role-user_id`, address.id as `address-id`, " +
-                            "address.street1 as `address-street1`, address.street2 as `address-street2`, user.id as " +
+                        "SELECT user.id AS `user-id`, user.name AS `user-name`, role.id AS `role-id`, " +
+                            "role.role_name AS `role-role_name`, user.id AS `role-user_id`, address.id AS `address-id`, " +
+                            "address.street1 AS `address-street1`, address.street2 AS `address-street2`, user.id AS " +
                             "`address-user_id` FROM user LEFT JOIN address ON (address.user_id = user.id ) " +
                             "LEFT JOIN user_has_role ON (user_has_role.user_id = user.id ) " +
                             "LEFT JOIN role ON (role.id = user_has_role.role_id ) " +
@@ -194,7 +195,7 @@ class MySQLJoinQuerySpec :
                                     .fields(
                                         "id",
                                         "user_id",
-                                        "(total_savings - total_spendings) as balance"
+                                        "(total_savings - total_spendings) AS balance"
                                     )
                                     .from("report"),
                                 "user_wallet"
@@ -205,7 +206,7 @@ class MySQLJoinQuerySpec :
                     assertEquals(
                         """
                     SELECT * FROM user INNER JOIN ( 
-                    SELECT id, user_id, (total_savings - total_spendings) as balance FROM report ) as user_wallet 
+                    SELECT id, user_id, (total_savings - total_spendings) AS balance FROM report ) AS user_wallet 
                     ON ( user_wallet.user_id = user.id )
                 """
                             .trimIndent()
