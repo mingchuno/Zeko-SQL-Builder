@@ -38,7 +38,7 @@ spotless { kotlin { ktfmt("0.46").kotlinlangStyle() } }
 
 group = "io.zeko"
 
-version = "1.4.1-SNAPSHOT"
+version = "1.5.0-SNAPSHOT"
 
 description = "io.zeko:zeko-sql-builder"
 
